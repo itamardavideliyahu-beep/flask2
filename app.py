@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Hello from my first CI/CD pipeline! first update"
+    return "Hello from my first CI/CD pipeline! first update second update"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
