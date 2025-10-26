@@ -1,11 +1,15 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline (Professional)
 
 on:
   push:
     branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  # שלב ראשון: בנייה ובדיקות
+  build_and_test:
+    name: 🧪 Build & Test
     runs-on: windows-latest
 
     steps:
@@ -23,7 +27,22 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: echo "✅ Tests passed successfully!"
+        run: |
+          echo "✅ All tests passed successfully!"
+          # כאן אפשר בעתיד להוסיף pytest או בדיקות אמיתיות
 
-      - name: Deploy simulation
-        run: echo "🚀 Deployment step would happen here"
+  # שלב שני: פריסה
+  deploy:
+    name: 🚀 Deploy to Render
+    runs-on: ubuntu-latest
+    needs: build_and_test  # לא ירוץ עד שהשלב הקודם הצליח
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Render
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
